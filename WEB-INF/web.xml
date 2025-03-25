@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE web-app PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" "http://java.sun.com/dtd/web-app_2_3.dtd">
+<web-app>
+  <display-name>survey</display-name>
+  <context-param>
+    <param-name>acceptableUsePolicyURL</param-name>
+    <param-value>http://www.org.com/acceptableuse.html</param-value>
+    <description>full URL to acceptable use policy; the link is shown on the first login (unless URL is empty); example: "http://www.org.com/acceptableuse.html";</description>
+  </context-param>
+  <context-param>
+    <param-name>accountCreationLogFileName</param-name>
+    <param-value>accountcreation.log</param-value>
+    <description>name of the logfile; log file is stored in the directory defined by the parameter "appDataDir"; example: "accountcreation.log"</description>
+  </context-param>
+  <context-param>
+    <param-name>adminEmail</param-name>
+    <param-value>myname@org.com</param-value>
+    <description>e-mail of the service administrator; example: "myname@org.com"; if left blank, no messages are sent to the administrator</description>
+  </context-param>
+  <context-param>
+    <param-name>appDataDir</param-name>
+    <param-value>/usr/local/survey/data/</param-value>
+    <description>directory which stores all user and survey data; needs leading and trailing slash; on MS Windows systems make sure to have the data on the same drive letter that the java application server is running on, java does not handle drive letters well, therefore do not include a drive letter; example: "/usr/local/survey/data/";</description>
+  </context-param>
+  <context-param>
+    <param-name>authenticationMethod</param-name>
+    <param-value>standalone</param-value>
+    <description>method used for authenticating users; can either be "standalone" or "ldap"; with "standalone" users are verified using a password stored in the user file; with "ldap" users are authenticated against an external LDAP server;</description>
+  </context-param>
+  <context-param>
+    <param-name>bgColor</param-name>
+    <param-value>#6699CC</param-value>
+    <description>background color used for survey UI; default: "#6699CC";</description>
+  </context-param>
+  <context-param>
+    <param-name>cryptSalt</param-name>
+    <param-value>3C</param-value>
+    <description>used for seeding the encryption algorithm that uses standard unix crypt; this is a two-digit hex code; example: "3C";</description>
+  </context-param>
+  <context-param>
+    <param-name>demoModeEnabled</param-name>
+    <param-value>0</param-value>
+    <description>flag that determines whether or not the "demo" mode is enabled; in "demo" mode anonymous users can login with e.g. "demo"/"demo" (defined by parameters "demoModePassword" and "demoModeUser") and use the service for a predefined period of time (set by parameter "demoModeLifetimeMinutes"); also, every 5 minutes a java timer task checks for any data that is older than the allowed period and deletes it; in "demo" mode the e-mail notification feature is disabled for *ALL users* (to avoid an anonymous spamming gateway); allowed values: "1" (enabled) or "0" (disabled); default: "0";</description>
+  </context-param>
+  <context-param>
+    <param-name>demoModeLifetimeMinutes</param-name>
+    <param-value>60</param-value>
+    <description>number of minutes that a user can use the service after loging in with "demo"/"demo"; allowed values: any number greater than 0; this parameter is only relevant if "demoModeEnabled" is set to "1"; default: "60"</description>
+  </context-param>
+  <context-param>
+    <param-name>demoModePassword</param-name>
+    <param-value>demo</param-value>
+    <description>login id of the demo user; allowed values: any alphanumeric string with 1 up to 8 characters; this parameter is only relevant if "demoModeEnabled" is set to "1"; default: "demo";</description>
+  </context-param>
+  <context-param>
+    <param-name>demoModeUser</param-name>
+    <param-value>demo</param-value>
+    <description>password of the demo user; allowed values: any alphanumeric string with 1 up to 8 characters; this parameter is only relevant if "demoModeEnabled" is set to "1" default: "demo"</description>
+  </context-param>
+  <context-param>
+    <param-name>emailFrom</param-name>
+    <param-value>webmaster@surveyserver.org.com</param-value>
+    <description>"from" email address that is used for the e-mails send from the service; example: "webmaster@surveyserver.org.com";</description>
+  </context-param>
+  <context-param>
+    <param-name>enableAutoUpdateStats</param-name>
+    <param-value>0</param-value>
+    <description>flag that determines whether or not the service automatically recalculates the statistics every midnight; depending on the number of users this can take a while; the calculation is very disk intensive; even without this parameter set the administrator ("admin") can request a recalculation of the stats at any point in time; allowed values: "1" (enabled) or "0" (disabled); default: "0";</description>
+  </context-param>
+  <context-param>
+    <param-name>enableEmailAdminOnNewUser</param-name>
+    <param-value>0</param-value>
+    <description>flag that determines whether or not the service administrator receives an e-mail every time a new user logs into the service for the first time; allowed values: "1" (enabled) or "0" (disabled); this parameter is only relevant if "adminEmail" is not empty; default: "0";</description>
+  </context-param>
+  <context-param>
+    <param-name>enableEmailAdminOnOpenSurvey</param-name>
+    <param-value>0</param-value>
+    <description>flag that determines whether or not the service administrator receives an e-mail every time any users opens a survey for data collection; allowed values: "1" (enabled) or "0" (disabled); this parameter is only relevant if "adminEmail" is not empty; default: "0";</description>
+  </context-param>
+  <context-param>
+    <param-name>enableSelfSignup</param-name>
+    <param-value>0</param-value>
+    <description>flag that determines whether or not users can login without having to be explicitly defined by the service admin; allowed values: "1" (allow any user known to the LDAP server to login in) or "0" (require that the admin creates an account for each user); this parameter is only relevant if "authenticationMethod" is set to "ldap"; default: "0";</description>
+  </context-param>
+  <context-param>
+    <param-name>feedbackURL</param-name>
+    <param-value>entry.jsp?id=1005859196544</param-value>
+    <description>full or relative URL of the survey that collects user feedback; example: "http://www.survey.org.com/survey/entry.jsp?id=100389823983";</description>
+  </context-param>
+  <context-param>
+    <param-name>hostName</param-name>
+    <param-value>wotho-pve.pebble-beach.ch:443</param-value>
+    <description>DNS name of the server running the survey service; a TCP port number can be attached by a colon; examples: "www.survey.org.com" or "www.survey.org.com:8080";</description>
+  </context-param>
+  <context-param>
+    <param-name>languageFileName</param-name>
+    <param-value>usenglish.xml</param-value>
+  </context-param>
+  <context-param>
+    <param-name>ldapAuthAuthType</param-name>
+    <param-value>simple</param-value>
+    <description>ldap server used for *auth*entication: ldap authentication type; default: "simple"; this parameter is only relevant if "authenticationMethod" is set to "ldap"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapAuthBaseDN</param-name>
+    <param-value>ou=People,o=myorg,c=US</param-value>
+    <description>ldap server used for *auth*entication: LDAP base DN; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "ou=People,o=myorg,c=US"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapAuthHost</param-name>
+    <param-value>ldap://authldap.org.com</param-value>
+    <description>ldap server used for *auth*entication: DNS name of the host that runs the LDAP server; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "ldap://authldap.org.com" (non-SSL), "ldaps://authldap.org.com" (SSL);</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapAuthPort</param-name>
+    <param-value>389</param-value>
+    <description>ldap server used for *auth*entication: TCP port that the LDAP server is listening on; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "389" (non-SSL) or "636" (SSL)</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapAuthServiceCredential</param-name>
+    <param-value/>
+    <description>ldap server used for *auth*entication: password of the LDAP user that has access to query LDAP for authentication and name resolution; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "qqe$eu@o"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapAuthServiceUser</param-name>
+    <param-value/>
+    <description>ldap server used for *auth*entication: LDAP user that has access to query LDAP for auth and name resolution; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "surveyService"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapAuthUidAttribute</param-name>
+    <param-value>uid</param-value>
+    <description>ldap server used for *auth*entication: LDAP attribute used to search for user; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "uid"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapAuthConstructDn</param-name>
+    <param-value>0</param-value>
+    <description>ldap server used for *auth*entication: whether the user's DN should be constructed from the ldapAuthBaseDN and ldapAuthUidAttribute ("1") or looked up in the ldap ("0")</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapAuthTls</param-name>
+    <param-value>0</param-value>
+    <description>ldap server used for *auth*entication: use TLS for communication with LDAP? "0" means no, "1" means yes</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapAuthSslSocketFactory</param-name>
+    <param-value/>
+    <description>ldap server used for *auth*entication: name of a custom class that implements an SSL socket factory; leave it blank, unless you consider yourself an LDAP specialist</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapNameAuthType</param-name>
+    <param-value>simple</param-value>
+    <description>ldap server used for *name* resolution: ldap authentication type; default: "simple"; this parameter is only relevant if "authenticationMethod" is set to "ldap"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapNameBaseDN</param-name>
+    <param-value>ou=People,o=myorg,c=US</param-value>
+    <description>ldap server used for *name* resolution: LDAP base DN; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "ou=People,o=myorg,c=US"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapNameHost</param-name>
+    <param-value>ldap.org.com</param-value>
+    <description>ldap server used for *name* resolution: DNS name of the host that runs the LDAP server; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "ldap.org.com"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapNamePort</param-name>
+    <param-value>389</param-value>
+    <description>ldap server used for *name* resolution: TCP port that the LDAP server is listening on; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "389"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapNameServiceCredential</param-name>
+    <param-value/>
+    <description>ldap server used for *name* resolution: password of the LDAP user that has access to query LDAP for authentication and name resolution; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "qq3$eu@o"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapNameServiceUser</param-name>
+    <param-value/>
+    <description>ldap server used for *name* resolution: LDAP user that has access to query LDAP for auth and name resolution; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "surveyService"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapNameUidAttribute</param-name>
+    <param-value>uid</param-value>
+    <description>ldap server used for *name* resolution: LDAP attribute used to search for user; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "uid"</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapNameFullNameAttribute</param-name>
+    <param-value>cn</param-value>
+    <description>ldap server used for *name* resolution: LDAP attribute used for full name; this parameter is only relevant if "authenticationMethod" is set to "ldap"; example: "cn"</description>
+  </context-param>
+  <context-param>
+    <param-name>loginLogFileName</param-name>
+    <param-value>login.log</param-value>
+    <description>name of the file that logs all logins; log file is stored in the directory defined by the parameter "appDataDir"; default: "login.log";</description>
+  </context-param>
+  <context-param>
+    <param-name>maxLenEntryPassword</param-name>
+    <param-value>12</param-value>
+    <description>maximum allowed length for a password that can be required from any person who fills in a survey; best to leave it unchanged; default: "12";</description>
+  </context-param>
+  <context-param>
+    <param-name>maxLenResultsPassword</param-name>
+    <param-value>15</param-value>
+    <description>maximum allowed length for a password that can be set to restrict who can access the survey results; best to leave it unchanged; default: "15";</description>
+  </context-param>
+  <context-param>
+    <param-name>maxLenSurveyName</param-name>
+    <param-value>30</param-value>
+    <description>maximum allowed length of the name of a survey; default: "30";</description>
+  </context-param>
+  <context-param>
+    <param-name>minLenEntryPassword</param-name>
+    <param-value>1</param-value>
+    <description>minimum allowed length for a password that can be required from any person who fills in a survey; best to leave it unchanged; default: "1";</description>
+  </context-param>
+  <context-param>
+    <param-name>minLenSurveyName</param-name>
+    <param-value>1</param-value>
+    <description>minimum allowed length of the name of a survey; default: "1";</description>
+  </context-param>
+  <context-param>
+    <param-name>pageFooterFile</param-name>
+    <param-value>footer.jsp</param-value>
+    <description>name of the file that contains the footer HTML; this file needs to reside in the application directory where all the JSP files are located; default: "footer.jsp";</description>
+  </context-param>
+  <context-param>
+    <param-name>pageHeaderFile</param-name>
+    <param-value>header.jsp</param-value>
+    <description>name of the file that contains the header HTML; this file needs to reside in the application directory where all the JSP files are located; default: "header.jsp"</description>
+  </context-param>
+  <context-param>
+    <param-name>regexValidEntryPasswordLetter</param-name>
+    <param-value>[A-Za-z0-9~\!@#$\&amp;%\^*\(\)\-_+=.,;]</param-value>
+    <description>regular expression that determines what qualifies for a valid password that can be required from any person who fills in a survey; note that some characters need escaping with a backslash; default: "[A-Za-z0-9~\!@#$\&amp;%\^*\(\)\-_+=.,;]";</description>
+  </context-param>
+  <context-param>
+    <param-name>regexValidPID</param-name>
+    <param-value>^[A-Za-z][_A-Za-z0-9\-]{1,7}$</param-value>
+    <description>regular expression that determines what qualifies for a valid user id; note that some characters need escaping with a backslash; default: "^[A-Za-z][_A-Za-z0-9\-]{1,7}$";</description>
+  </context-param>
+  <context-param>
+    <param-name>maxLenPID</param-name>
+    <param-value>8</param-value>
+    <description>maximum allowed length for login PID; default: "8";</description>
+  </context-param>
+  <context-param>
+    <param-name>maxLenPassword</param-name>
+    <param-value>16</param-value>
+    <description>maximum allowed length for login Password; default: "16";</description>
+  </context-param>
+  <context-param>
+    <param-name>regexValidResultsPassword</param-name>
+    <param-value>^.{0,15}$</param-value>
+    <description>regular expression that determines what qualifies for a valid password that can be set to restrict who can access the survey results; note that some characters need escaping with a backslash; default: "^.{0,15}$";</description>
+  </context-param>
+  <context-param>
+    <param-name>regexValidSurveyNameLetter</param-name>
+    <param-value>[A-Za-z\-_ #0-9\.\'\"\:\(\)\&amp;\,]</param-value>
+    <description>regular expression that determines what qualifies for a valid letter in the survey name; note that some characters need escaping with a backslash; default: "[A-Za-z\-_ #0-9\.\'\"\:\(\)\&amp;\,]";</description>
+  </context-param>
+  <context-param>
+    <param-name>regexValidUserPassword</param-name>
+    <param-value>^.{3,16}$</param-value>
+    <description>regular expression that determines what qualifies for a valid user password; note that some characters need escaping with a backslash default: "^.{3,16}$";</description>
+  </context-param>
+  <context-param>
+    <param-name>rootURL</param-name>
+    <param-value>/survey/</param-value>
+    <description>path to the survey application (after the fully qualified domain name); leading and trailing slash is required; example: "/survey/";</description>
+  </context-param>
+  <context-param>
+    <param-name>serviceName</param-name>
+    <param-value>Survey</param-value>
+    <description>name of the service which is used throughout the UI; example: "Survey";</description>
+  </context-param>
+  <context-param>
+    <param-name>serviceProvider</param-name>
+    <param-value>Hertz University</param-value>
+    <description>Name of your organization which is used throughout the UI; example: "Hertz University";</description>
+  </context-param>
+  <context-param>
+    <param-name>smtpHost</param-name>
+    <param-value>mail.org.edu</param-value>
+    <description>DNS of the mail server; if left blank no e-mails can be sent; example: "mail.org.com";</description>
+  </context-param>
+  <context-param>
+    <param-name>urlScheme</param-name>
+    <param-value>https</param-value>
+    <description>either "http" or "https"</description>
+  </context-param>
+  <context-param>
+    <param-name>xmlEncoding</param-name>
+    <param-value>ISO-8859-1</param-value>
+    <description>XML encoding used for writing XML files</description>
+  </context-param>
+  <context-param>
+    <param-name>ldapADdomain</param-name>
+    <param-value>@it.domain.ext</param-value>
+  </context-param>
+  <session-config>
+    <session-timeout>180</session-timeout>
+  </session-config>
+  <taglib>
+    <taglib-uri>/survey</taglib-uri>
+    <taglib-location>/survey_1_0.tld</taglib-location>
+  </taglib>
+</web-app>

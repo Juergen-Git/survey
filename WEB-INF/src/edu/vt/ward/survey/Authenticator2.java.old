@@ -1,0 +1,90 @@
+// vanas : adaptation for AD
+package edu.vt.ward.survey;
+
+import javax.naming.NamingException;
+import edu.vt.middleware.ldap.Authenticator;
+
+public class Authenticator2 extends Authenticator {
+
+  // Fields
+  public static final String LICENSE = "Licensed under the GPL";
+  protected String userfield;
+  protected String user;
+  protected Object credential;
+  protected boolean constructDn;
+
+  // Constructors
+  public Authenticator2()
+  {
+  	super();
+  }
+
+  public Authenticator2(String string, String string1)
+  {
+  	super(string,string1);
+  }
+
+  // Methods
+  public boolean authenticate()
+  {
+   return super.authenticate();
+  }
+  public boolean authenticate(String string, Object object)
+  {
+    if( Config.ldapADdomain.length() == 0){
+      return super.authenticate(string,object);
+    }
+    else{
+        super.setService(string+Config.ldapADdomain,object);
+        boolean exists = false;
+        this.connect();
+
+        try {
+          String searchFilter = "(objectclass=*)";
+          String[] returnAttributes = { "objectclass" };
+
+          if (this.search (searchFilter, returnAttributes).hasNext()) { // user exist
+            exists = true;
+          }
+        }
+        catch ( NamingException e ) { }
+
+        this.close();
+        return exists;
+    }
+  }
+
+  public boolean authenticateDn(String string, Object object)
+  {
+   return super.authenticateDn(string,object);
+  }
+  public void setUserfield(String string)
+  {
+     super.setUserfield(string);
+  }
+  public String getUserfield()
+  {
+      return super.getUserfield();
+  }
+  public void setUser(String string)
+  {
+      super.setUser(string);
+  }
+  public String getUser()
+  {
+      return super.getUser();
+  }
+  public void setCredential(Object object)
+  {
+      super.setCredential(object);
+  }
+  public void setConstructDn(boolean boolean0)
+  {
+      super.setConstructDn(boolean0);
+  }
+  public boolean getConstructDn()
+  {
+      return super.getConstructDn();
+  }
+
+}

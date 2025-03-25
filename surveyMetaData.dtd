@@ -1,0 +1,15 @@
+<!ELEMENT survey (name,adminEmail?,admins?,opened?,closed?,accessResultsRestriction?,resultsPassword?,entryRestriction?,entryPassword?,members?,oneEntryOnly?)>
+<!ATTLIST survey ownerId CDATA #IMPLIED>
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT adminEmail (#PCDATA)>
+<!ELEMENT admins (adminPID*)>
+<!ELEMENT adminPID (#PCDATA)>
+<!ELEMENT opened (#PCDATA)>
+<!ELEMENT closed (#PCDATA)>
+<!ELEMENT accessResultsRestriction (#PCDATA)>
+<!ELEMENT resultsPassword (#PCDATA)>
+<!ELEMENT entryRestriction (#PCDATA)>
+<!ELEMENT entryPassword (#PCDATA)>
+<!ELEMENT members (memberPID*)>
+<!ELEMENT memberPID (#PCDATA)>
+<!ELEMENT oneEntryOnly (#PCDATA)>

@@ -1,0 +1,76 @@
+<!ELEMENT survey (title?, bgColor?, textColor?, font?, header?, footer?, baseHref?, userCSS?, divider?, exitPageText?, introductionText?, section*)>
+<!ATTLIST survey
+	entryAuthUser CDATA #IMPLIED
+        showBorder CDATA #IMPLIED
+        exportDelimiter CDATA #IMPLIED
+        exportIncludeQuestions CDATA #IMPLIED
+        ip CDATA #IMPLIED
+        browserId CDATA #IMPLIED
+        javascriptEnabled CDATA #IMPLIED
+        count CDATA #IMPLIED
+>
+<!ELEMENT title (#PCDATA)>
+<!ELEMENT bgColor (#PCDATA)>
+<!ELEMENT textColor (#PCDATA)>
+<!ELEMENT font (#PCDATA)>
+<!ATTLIST font
+	size CDATA #IMPLIED
+>
+<!ELEMENT header (#PCDATA)>
+<!ELEMENT footer (#PCDATA)>
+<!ELEMENT baseHref (#PCDATA)>
+<!ELEMENT userCSS (#PCDATA)>
+<!ELEMENT divider (#PCDATA)>
+<!ELEMENT introductionText (#PCDATA)>
+<!ELEMENT exitPageText (#PCDATA)>
+<!ATTLIST exitPageText
+	isHTML CDATA #IMPLIED
+>
+<!ELEMENT section (question*)>
+<!ATTLIST section
+	title CDATA #IMPLIED
+>
+<!ELEMENT question (questionText?, (inputComment | inputRadio | inputCheckbox | inputTextline | inputTextarea)?)>
+<!ATTLIST question
+	showDivider CDATA #IMPLIED
+	exportInclude CDATA #IMPLIED
+        exportExpand CDATA #IMPLIED
+>
+<!ELEMENT questionText (#PCDATA)>
+<!ELEMENT inputComment (#PCDATA)>
+<!ATTLIST inputComment
+	isHTML CDATA #IMPLIED
+>
+<!ELEMENT inputTextline (#PCDATA)>
+<!ATTLIST inputTextline
+	size CDATA #IMPLIED
+	maxLength CDATA #IMPLIED
+	label CDATA #IMPLIED
+	count CDATA #IMPLIED
+>
+<!ELEMENT inputTextarea (#PCDATA)>
+<!ATTLIST inputTextarea
+	cols CDATA #IMPLIED
+	rows CDATA #IMPLIED
+	count CDATA #IMPLIED
+>
+<!ELEMENT inputRadio (option*, otherShortAnswer?)>
+<!ATTLIST inputRadio
+	layout CDATA #IMPLIED
+>
+<!ELEMENT otherShortAnswer (#PCDATA)>
+<!ATTLIST otherShortAnswer
+	label CDATA #IMPLIED
+	count CDATA #IMPLIED
+>
+<!ELEMENT inputCheckbox (option*, otherShortAnswer?)>
+<!ATTLIST inputCheckbox
+	layout CDATA #IMPLIED
+>
+<!ELEMENT option (#PCDATA)>
+<!ATTLIST option
+	label CDATA #IMPLIED
+        exportCode CDATA #IMPLIED
+	selected CDATA #IMPLIED
+	count CDATA #IMPLIED
+>

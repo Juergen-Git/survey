@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE taglib PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+ "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+	<tlibversion>1.0</tlibversion>
+	<jspversion>1.1</jspversion>
+	<shortname>survey</shortname>
+	<info>
+        SurveyMaker tag library
+    </info>
+	<tag>
+		<name>pageHeader</name>
+		<tagclass>edu.vt.ward.survey.PageHeader</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>Print out the HTML page header including VT navbar</info>
+		<attribute>
+			<name>title</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>headerTitle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>headerKeywords</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<name>onLoad</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
+		<name>pageFooter</name>
+		<tagclass>edu.vt.ward.survey.PageFooter</tagclass>
+		<bodycontent>empty</bodycontent>
+		<info>Print out the HTML page footer</info>
+	</tag>
+</taglib>

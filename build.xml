@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="VTSurvey" default="compile" basedir=".">
+
+<!-- ================================================================= -->
+<!-- Load User and Application Properties                              -->
+<!--    Note: Order is important!                                      -->
+<!--          This allows properties to be loaded in this order:       -->
+<!--          project-specific properties ${basedir}/build.properties  -->
+<!--          user-specific properties    $HOME/build.properties       -->
+<!--          project defaults            (in this file)               -->
+<!-- ================================================================= -->
+
+<property environment="env" />
+<property name="env.COMPUTERNAME"
+          value="${env.HOSTNAME}" />
+
+<property name="user.properties.file"
+          location="${user.home}/build.properties" />
+
+<property name="build.properties" value="build.properties" />
+	
+<property file="${build.properties}" />
+<property file="${user.properties.file}" />
+<property name="build.history.file" value="${user.home}/ANT_BUILD_HISTORY.log" />
+<property name="buildnumber.properties" value="buildnumber.properties" />
+
+<!-- ========================================================= -->
+<!-- Directory Mappings                                        -->
+<!-- ========================================================= -->
+<property name="app.name"       value="vtsurvey" />
+<property name="version.major"       value="2" />
+<property name="version.minor"       value="2" />
+<property name="version.release"       value="4" />
+<property name="dist.zip"       value="${app.name}-${version.major}.${version.minor}.${version.release}.zip" />
+	
+<property name="root.dir"    location="${basedir}" />
+<property name="build.dir"   location="${root.dir}/bin" />
+<property name="web-inf.dir" location="${root.dir}/WEB-INF" />
+<property name="src.dir"     location="${web-inf.dir}/src" />
+<property name="lib.dir"     location="${web-inf.dir}/lib" />
+<!-- misc configuration files -->
+<property name="conf.dir"    location="${root.dir}/etc" />
+<property name="publish.dir" location="${basedir}/publish" />
+<property name="javadoc.dir" location="${publish.dir}/api" />
+	
+<!-- ========================================================= -->
+<!-- Copmpilation Settings                                     -->
+<!-- ========================================================= -->
+<property name="build.debug"       value="on" />
+<property name="build.optimize"    value="off" />
+<property name="build.deprecation" value="on" />
+<property name="build.compilerarg" value="" />
+<property name="build.target"      value="1.4" />
+<property name="build.source"      value="${build.target}" />
+
+<!-- ======================================================================= -->	
+<!-- Project Settings 	                                                     -->
+<!-- These can all be overriddedn in the {project|user}build.properties file -->
+<!-- ======================================================================= -->
+  <property name="app.name"       value="vtsurvey" />
+  <property name="tomcat.home"    value="${env.TOMCAT_HOME}" />
+  <property name="tomcat.deploy.dir" value="${tomcat.home}/webapps" />
+  <property name="jboss.home"     value="${env.JBOSS_HOME}" />
+  <property name="jboss.deploy.dir" value="${jboss.home}/server/default/deploy" />
+  <property name="dist.home"      value="${basedir}" />
+  <property name="dist.jar"       value="${app.name}.jar" />
+  <property name="dist.war"       value="survey.war" />
+
+<patternset id="webfiles">	
+    <include name="**/*.js"  />
+    <include name="**/*.jsp" />
+ 	<include name="**/*.tld" />
+ 	<include name="**/*.dtd" />
+ 	<include name="**/*.xml" />
+ 	<include name="**/*.css" />
+    <include name="**/*.gif" />
+ 	<include name="**/*.png" />
+ 	<include name="**/*.properties" />
+ 	<exclude name="bin/**" />
+ 	<exclude name="etc/**" />
+</patternset>
+	
+<!-- ============= -->
+<!-- Setup Targets -->
+<!-- ============= -->
+	<!-- TODO: Decide the desired structure of the project -
+	           Do we want to run (in Tomcat) directly from the project directory?
+	           Or build in a separate directory and deploy in Tomcat? -->
+<target name="prepare" description="make all required directories, set up environment">
+    <mkdir dir="${build.dir}" />
+
+    <copy todir="${build.dir}">
+      <fileset dir="${root.dir}">
+          <patternset refid="webfiles" />
+      </fileset>
+    </copy>
+
+    <mkdir dir="${build.dir}/WEB-INF"/>
+    <mkdir dir="${build.dir}/WEB-INF/classes"/>
+
+    <mkdir  dir="${build.dir}/WEB-INF/lib"/>
+    <copy todir="${build.dir}/WEB-INF/lib">
+      <fileset dir="${web-inf.dir}/lib">
+          <include name="*.jar"/>
+          <exclude name="servlet.jar" />
+      	  <exclude name="servlet-api.jar" />
+      </fileset>
+    </copy>
+</target>
+
+<target name="clean" description="removes all compiled files">
+    <delete dir="${build.dir}"/>
+</target>
+	
+<!-- Path to all jar files required to build -->
+<path id="buildjars">
+   <fileset dir="${lib.dir}" includes="*.jar" />
+</path>
+
+<!-- =============== -->
+<!-- Compile Targets -->
+<!-- =============== -->
+
+<target name="compile" depends="prepare">
+	<echo message="Compiling with options: debug=${build.debug} optimize=${build.optimize} deprecation=${build.deprecation}" />
+    <javac srcdir="${src.dir}" 
+           destdir="${build.dir}/WEB-INF/classes"
+           debug="${build.debug}" 
+	   optimize="${build.optimize}" 
+	   deprecation="${build.deprecation}"
+	   target="${build.target}"
+	   source="${build.source}" >
+        <classpath refid="buildjars" />
+    	<compilerarg line="${build.compilerarg}" />   
+    </javac>
+</target>
+
+  <!-- ==================== -->
+  <!-- Distribution Targets -->
+  <!-- ==================== -->
+
+<target name="deploy-survey.vt.edu" depends="clean, prepare, compile"
+	description="Packages war file for hosting">
+    <copy file="${conf.dir}/survey.vt.edu/web.xml" tofile="${build.dir}/WEB-INF/web.xml" overwrite="true" />
+    <copy todir="${build.dir}" overwrite="true">
+	    <fileset dir="${conf.dir}/survey.vt.edu">
+	    	<include name="**/*.jsp" />
+	    	<include name="**/*.html" />
+	    </fileset>
+    </copy>
+    
+    <jar jarfile="${dist.home}/${dist.war}" 
+    	 basedir="${build.dir}">
+    </jar>
+</target>
+
+<target name="deploy-open-source" depends="clean, prepare, compile"
+	description="Packages war file for Open Source Distribution">
+    <copy file="${conf.dir}/opensource/web.xml" tofile="${build.dir}/WEB-INF/web.xml" overwrite="true" />
+    <copy todir="${build.dir}" overwrite="true">
+	    <fileset dir="${conf.dir}/opensource">
+	    	<include name="**/*.html" />
+	    </fileset>
+    </copy>
+    
+	<delete dir="${build.dir}/data" />
+	<copy todir="${build.dir}/WEB-INF">
+		<fileset dir="${root.dir}/WEB-INF">
+		   <include name="src/**" />
+		</fileset>
+	</copy>
+    <jar jarfile="${dist.home}/${dist.war}" 
+    	 basedir="${build.dir}">
+    </jar>
+	
+	<delete file="${dist.zip}" failonerror="false" />
+	
+    <zip zipfile="${dist.zip}">
+    	<fileset dir="${dist.home}" includes="INSTALL,CHANGELOG,LICENSE,${dist.war}" />
+    	<fileset dir="${root.dir}" includes="data/**" />
+    </zip>
+	
+</target>
+  
+</project>

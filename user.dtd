@@ -1,0 +1,6 @@
+<!ELEMENT user (surveys?)>
+<!ELEMENT surveys (survey*)>
+<!ELEMENT survey EMPTY>
+<!ATTLIST user password CDATA #IMPLIED>
+<!ATTLIST user usePolicyAccepted CDATA #IMPLIED>
+<!ATTLIST survey id CDATA #REQUIRED>
